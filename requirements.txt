@@ -1,0 +1,5 @@
+cython >= 0.29
+pytest
+
+numpy >= 1.23
+scipy
