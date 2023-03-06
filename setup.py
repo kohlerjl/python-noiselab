@@ -13,5 +13,6 @@ lib_path = [
 setup(
     ext_modules=cythonize([
         Extension("noiselab.generators._markov", ["noiselab/generators/_markov.pyx"], include_dirs=[inc_path], library_dirs=lib_path),
+        Extension("noiselab.generators._relaxation", ["noiselab/generators/_relaxation.pyx"], include_dirs=[inc_path], library_dirs=lib_path, libraries=['npymath', 'npyrandom']),
     ]),
 )
