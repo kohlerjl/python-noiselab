@@ -1,0 +1,17 @@
+from setuptools import Extension, setup
+from Cython.Build import cythonize
+import numpy as np
+from os.path import join, abspath
+
+inc_path = np.get_include()
+# Add paths for npyrandom and npymath libraries:
+lib_path = [
+    abspath(join(np.get_include(), '..', '..', 'random', 'lib')),
+    abspath(join(np.get_include(), '..', 'lib'))
+]
+
+setup(
+    ext_modules=cythonize([
+        Extension("noiselab.generators._markov", ["noiselab/generators/_markov.pyx"], include_dirs=[inc_path], library_dirs=lib_path),
+    ]),
+)

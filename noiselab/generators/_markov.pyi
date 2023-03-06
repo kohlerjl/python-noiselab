@@ -1,0 +1,3 @@
+import numpy as np
+
+def integrate_markov(dW: np.ndarray, out: np.ndarray, D2: float, G: float, y0: float) -> None: ...
