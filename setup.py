@@ -15,5 +15,9 @@ setup(
         Extension("noiselab.generators._markov", ["noiselab/generators/_markov.pyx"], include_dirs=[inc_path], library_dirs=lib_path),
         Extension("noiselab.generators._relaxation", ["noiselab/generators/_relaxation.pyx"], include_dirs=[inc_path], library_dirs=lib_path, libraries=['npymath', 'npyrandom']),
         Extension("noiselab.adev._adev", ["noiselab/adev/_adev.pyx"], include_dirs=[inc_path], library_dirs=lib_path),
+        Extension("noiselab.tdigest._tdigest", [
+            "noiselab/tdigest/_tdigest.pyx",
+            "noiselab/tdigest/t-digest-c/src/tdigest.c"
+        ], include_dirs=["noiselab/tdigest/t-digest-c/src/", inc_path], library_dirs=lib_path),
     ]),
 )

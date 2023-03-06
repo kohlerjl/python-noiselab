@@ -1,0 +1,3 @@
+[submodule "noiselab/tdigest/t-digest-c"]
+	path = noiselab/tdigest/t-digest-c
+	url = https://github.com/RedisBloom/t-digest-c.git
