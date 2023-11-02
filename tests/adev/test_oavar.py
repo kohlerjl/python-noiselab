@@ -17,7 +17,7 @@ def test_adev_spacing(generator):
     noise = generator.sample(num=100, dt=1)
 
     def _test(noise, taus, data_type):  # noqa
-        taus, avar, num_terms = oavar(noise, dt=1, taus=taus, data_type=data_type, return_num=True)
+        taus, avar, num_terms = oavar(noise, dt=1, taus=taus, data_type=data_type)
         assert all(num_terms > 1)
 
     for data_type in ('averaged', 'integrated'):
@@ -33,7 +33,7 @@ def test_adev_large(generator):
     noise = generator.sample(num=10_000_000, dt=1)
 
     def _test(noise, taus, data_type):  # noqa
-        taus, avar = oavar(noise, dt=1, taus=taus, data_type=data_type)
+        taus, avar, _ = oavar(noise, dt=1, taus=taus, data_type=data_type)
         # If data type conversions aren't done properly, avar can end up negative!!
         assert all(np.isfinite(avar))
         assert all(avar > 0)
@@ -50,8 +50,8 @@ def test_adev_large_mean(generator):
     noise = generator.sample(num=1_000_000, dt=1)
 
     def _test_offset(x, offset, taus, data_type):  # noqa
-        taus, avar, num_terms = oavar(x, dt=1, taus=taus, data_type=data_type, return_num=True)
-        taus2, avar2, num_terms2 = oavar(x + offset, dt=1, taus=taus, data_type=data_type, return_num=True)
+        taus, avar, num_terms = oavar(x, dt=1, taus=taus, data_type=data_type)
+        taus2, avar2, num_terms2 = oavar(x + offset, dt=1, taus=taus, data_type=data_type)
 
         assert np.all(np.isclose(taus, taus2))
         assert np.all(np.isclose(num_terms, num_terms2))

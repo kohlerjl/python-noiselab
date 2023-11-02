@@ -13,8 +13,7 @@ logger = logging.getLogger(__name__)
 
 def oavar(data: np.ndarray, dt: float, *,
           taus: str | typing.Sequence[int] = 'octave',
-          data_type='averaged',
-          return_num=False) -> typing.Optional[(np.ndarray, np.ndarray), (np.ndarray, np.ndarray, np.ndarray)]:
+          data_type='averaged') -> (np.ndarray, np.ndarray, np.ndarray):
 
     if data_type == 'averaged' or data_type == 'freq':
         x = integrate_samples(data)
@@ -35,20 +34,12 @@ def oavar(data: np.ndarray, dt: float, *,
     if len(strides) > 0:
         oavar_integrated(x, strides=strides, out=out)
 
-    if return_num:
-        num_terms = num_intervals - 2 * strides + 1
-        return strides*dt, out/norm, num_terms
-    else:
-        return strides*dt, out / norm
+    num_terms = num_intervals - 2 * strides + 1
+    return strides*dt, out/norm, num_terms
 
 
 def oadev(data: np.ndarray, dt: float, *,
           taus: str | typing.Sequence[int] = 'octave',
-          data_type='averaged',
-          return_num=False):
-    if return_num:
-        taus, avar, num_terms = oavar(data, dt, taus=taus, data_type=data_type, return_num=True)
-        return taus, np.sqrt(avar), num_terms
-    else:
-        taus, avar = oavar(data, dt, taus=taus, data_type=data_type, return_num=False)
-        return taus, np.sqrt(avar)
+          data_type='averaged') -> (np.ndarray, np.ndarray, np.ndarray):
+    taus, avar, num_terms = oavar(data, dt, taus=taus, data_type=data_type)
+    return taus, np.sqrt(avar), num_terms

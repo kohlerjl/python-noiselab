@@ -24,7 +24,7 @@ def noise(generator):
 def test_realtime(noise):
     for data_type in ('averaged', 'integrated'):
         for taus_str in ('octave', 'octave2', 'decade1', 'decade3'):
-            taus, avar, ns = oavar(noise, dt=dt, taus=taus_str, data_type=data_type, return_num=True)
+            taus, avar, ns = oavar(noise, dt=dt, taus=taus_str, data_type=data_type)
             rt = RealtimeADEV(dt=dt, max_tau=taus[-1], taus=taus_str, data_type=data_type)
             rt.extend(noise)
 
@@ -41,7 +41,7 @@ def test_realtime(noise):
 
 
 def run_test(noise, chunksize, taus='decade3', data_type='averaged'):
-    taus, avar, ns = oavar(noise, dt=dt, taus=taus, data_type=data_type, return_num=True)
+    taus, avar, ns = oavar(noise, dt=dt, taus=taus, data_type=data_type)
     rt = RealtimeADEV(dt=dt, taus=taus, data_type=data_type)
     for chunk in noise.reshape((chunksize, -1)):
         rt.extend(chunk)
