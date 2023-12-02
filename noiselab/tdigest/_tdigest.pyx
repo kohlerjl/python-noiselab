@@ -92,7 +92,8 @@ cdef class TDigest(object):
         if res == EDOM:
             raise RuntimeError("Overflow")
 
-    def extend(self, double [::1] values not None, long long [::1] weights = None):
+    def extend(self, const double [::1] values not None, const long long [::1] weights = None):
+        # TODO handle NaN input values
         cdef Py_ssize_t idx
         cdef int res = 0
         if weights is not None:
@@ -123,7 +124,7 @@ cdef class TDigest(object):
     def cdf(self, double x):
         return td_cdf(self.td, x)
 
-    def cdfs(self, double [::1] x):
+    def cdfs(self, const double [::1] x):
         cdef np.ndarray[np.double_t, ndim=1] result
         cdef Py_ssize_t num, idx
 
@@ -136,7 +137,7 @@ cdef class TDigest(object):
     def quantile(self, double q):
         return td_quantile(self.td, q)
 
-    def quantiles(self, double [::1] qs not None):
+    def quantiles(self, const double [::1] qs not None):
         cdef Py_ssize_t num
         cdef np.ndarray[np.double_t, ndim=1] values
 
