@@ -155,4 +155,4 @@ cython_debug/
 # PyCharm
 .idea/
 
-noiselab/_version.py
+src/noiselab/_version.py
