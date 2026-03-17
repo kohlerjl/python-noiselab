@@ -1,12 +1,18 @@
 import numpy as np
 
-from .base import GeneratorBase
 from ._markov import integrate_markov
+from .base import GeneratorBase
 
 
 class MarkovProcess(GeneratorBase):
 
-    def __init__(self, diffusion_rate=None, correlation_time=None, var=None, mean=0.0, rng=None, seed=None):
+    def __init__(self, *,
+                 diffusion_rate: float | None = None,
+                 correlation_time: float | None = None,
+                 var: float | None = None,
+                 mean: float = 0.0,
+                 rng: np.random.Generator | None = None,
+                 seed: int | None = None):
         super().__init__(rng=rng, seed=seed)
 
         if sum(x is not None for x in [diffusion_rate, correlation_time, var]) != 2:
@@ -31,7 +37,7 @@ class MarkovProcess(GeneratorBase):
 
         self._state = np.sqrt(self.var) * self.rng.standard_normal(1, dtype=np.double)
 
-    def reset(self, init=None, seed=None):
+    def reset(self, init: float | None = None, *, seed: int | None = None) -> None:
         with self. _lock:
             super().reset(seed=seed)
 
@@ -44,7 +50,13 @@ class MarkovProcess(GeneratorBase):
         dW = self.rng.standard_normal(num, dtype=np.double)
         out = np.empty(shape=num, dtype=np.float64)
         with self._lock:
-            integrate_markov(dW, out, y0=self._state, D2=np.sqrt(dt * self.diffusion_rate), G=dt/self.correlation_time)
+            integrate_markov(
+                dW,
+                out,
+                y0=self._state,
+                D2=np.sqrt(dt * self.diffusion_rate),
+                G=dt / self.correlation_time,
+            )
             self._state = out[-1]
 
         if self.mean:
@@ -56,5 +68,5 @@ class MarkovProcess(GeneratorBase):
         return self.var * np.exp(-np.abs(tau) / self.correlation_time)
 
     def psd(self, f: np.ndarray) -> np.ndarray:
-        x = 2*np.pi*self.correlation_time*f
+        x = 2 * np.pi * self.correlation_time * f
         return self.diffusion_rate * self.correlation_time**2 / (x**2 + 1)

@@ -125,3 +125,6 @@ unfixable = ["F401", "F841"]
 
 [tool.ruff.lint.isort]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.flake8-annotations]
+mypy-init-return = true
