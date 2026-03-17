@@ -17,7 +17,7 @@ class MarkovProcess(GeneratorBase):
                  seed: int | None = None):
         super().__init__(rng=rng, seed=seed)
 
-        if sum(x is not None for x in [diffusion_rate, correlation_time, var]) != 2:
+        if sum(x is None for x in [diffusion_rate, correlation_time, var]) != 1:
             raise ValueError("Exactly two of diffusion_rate, correlation_time, or var must be specified.")
 
         if diffusion_rate is not None:

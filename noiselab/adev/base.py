@@ -48,7 +48,7 @@ def get_strides(dt: float, num: int, taus: str | Iterable[float], dtype: np.dtyp
 
 def integrate_samples(x: TDoubleArray) -> TDoubleArray:
     # Subtract mean to avoid loss of precision from accumulator overflow in integrated values
-    x = x - np.mean(x)
+    x -= np.mean(x)
     sum_x = np.empty(len(x) + 1, dtype=x.dtype)
     sum_x[0] = 0
     np.cumsum(x, out=sum_x[1:])

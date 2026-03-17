@@ -16,10 +16,10 @@ def oavar(data: np.ndarray, dt: float, *,
           taus: str | abc.Iterable[int] = 'octave',
           data_type: Literal['averaged', 'integrated'] = 'averaged') -> tuple[TDoubleArray, TDoubleArray, TIntArray]:
 
-    if data_type in ('averaged', 'freq'):
+    if data_type in {'averaged', 'freq'}:
         x = integrate_samples(data)
         norm = 1.0
-    elif data_type in ('integrated', 'phase'):
+    elif data_type in {'integrated', 'phase'}:
         x = data
         norm = dt**2
     else:
