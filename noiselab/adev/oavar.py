@@ -1,24 +1,25 @@
 from __future__ import annotations
 
 import logging
-import typing
+from collections import abc
+from typing import Literal
 
 import numpy as np
 
-from .base import get_strides, integrate_samples
 from ._adev import oavar_integrated
+from .base import TDoubleArray, TIntArray, get_strides, integrate_samples
 
 logger = logging.getLogger(__name__)
 
 
 def oavar(data: np.ndarray, dt: float, *,
-          taus: str | typing.Sequence[int] = 'octave',
-          data_type='averaged') -> (np.ndarray, np.ndarray, np.ndarray):
+          taus: str | abc.Iterable[int] = 'octave',
+          data_type: Literal['averaged', 'integrated'] = 'averaged') -> tuple[TDoubleArray, TDoubleArray, TIntArray]:
 
-    if data_type == 'averaged' or data_type == 'freq':
+    if data_type in {'averaged', 'freq'}:
         x = integrate_samples(data)
-        norm = 1
-    elif data_type == 'integrated' or data_type == 'phase':
+        norm = 1.0
+    elif data_type in {'integrated', 'phase'}:
         x = data
         norm = dt**2
     else:
@@ -35,11 +36,11 @@ def oavar(data: np.ndarray, dt: float, *,
         oavar_integrated(x, strides=strides, out=out)
 
     num_terms = num_intervals - 2 * strides + 1
-    return strides*dt, out/norm, num_terms
+    return strides * dt, out / norm, num_terms
 
 
 def oadev(data: np.ndarray, dt: float, *,
-          taus: str | typing.Sequence[int] = 'octave',
-          data_type='averaged') -> (np.ndarray, np.ndarray, np.ndarray):
-    taus, avar, num_terms = oavar(data, dt, taus=taus, data_type=data_type)
-    return taus, np.sqrt(avar), num_terms
+          taus: str | abc.Iterable[int] = 'octave',
+          data_type: Literal['averaged', 'integrated'] = 'averaged') -> tuple[TDoubleArray, TDoubleArray, TIntArray]:
+    actual_taus, avar, num_terms = oavar(data, dt, taus=taus, data_type=data_type)
+    return actual_taus, np.sqrt(avar), num_terms

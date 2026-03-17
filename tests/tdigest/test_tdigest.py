@@ -1,6 +1,6 @@
-import pytest
-
 import numpy as np
+import pytest
+from numpy.typing import NDArray
 from scipy import stats
 
 from noiselab.tdigest import TDigest
@@ -12,12 +12,12 @@ distributions = {
 
 
 @pytest.fixture(scope='module', params=list(distributions.values()), ids=list(distributions.keys()))
-def noise_sample(request):
+def noise_sample(request: pytest.FixtureRequest) -> NDArray[np.double]:
     dist = request.param
     return dist.rvs(size=100_000)
 
 
-def test_min_max(noise_sample):
+def test_min_max(noise_sample: NDArray[np.double]) -> None:
     td = TDigest(compression=400)
     td.extend(noise_sample)
 
@@ -25,7 +25,7 @@ def test_min_max(noise_sample):
     assert td.max == np.max(noise_sample)
 
 
-def test_append_vs_extend(noise_sample):
+def test_append_vs_extend(noise_sample: NDArray[np.double]) -> None:
     td1 = TDigest(compression=400)
     td1.extend(noise_sample)
 
@@ -43,7 +43,7 @@ def test_append_vs_extend(noise_sample):
     assert np.all(weights1 == weights2)
 
 
-def test_quantile_vs_quantiles(noise_sample):
+def test_quantile_vs_quantiles(noise_sample: NDArray[np.double]) -> None:
     td = TDigest(compression=400)
     td.extend(noise_sample)
 
@@ -53,7 +53,7 @@ def test_quantile_vs_quantiles(noise_sample):
     assert np.all(xs == xs2)
 
 
-def test_cdf_vs_cdfs(noise_sample):
+def test_cdf_vs_cdfs(noise_sample: NDArray[np.double]) -> None:
     td = TDigest(compression=400)
     td.extend(noise_sample)
 

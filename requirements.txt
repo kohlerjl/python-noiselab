@@ -1,5 +1,15 @@
 cython >= 0.29
 pytest
+pip
+build
+ruff
 
 numpy >= 1.23
 scipy
+
+tdigest-rs
+tdigest-cffi
+pytdigest
+
+jupyterlab
+matplotlib

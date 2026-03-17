@@ -1,14 +1,19 @@
 from __future__ import annotations
 
-from .base import GeneratorBase
-
 import numpy as np
 from numpy.random import Generator
+
+from .base import GeneratorBase
 
 
 class WienerProcess(GeneratorBase):
 
-    def __init__(self, diffusion_rate: float, mean=0.0, init_var=0.0, rng: Generator = None, seed=None):
+    def __init__(self, *,
+                 diffusion_rate: float,
+                 mean: float = 0.0,
+                 init_var: float = 0.0,
+                 rng: Generator | None = None,
+                 seed: int | None = None):
         super().__init__(rng=rng, seed=seed)
         self.diffusion_rate = diffusion_rate
         self.mean = mean
@@ -16,9 +21,9 @@ class WienerProcess(GeneratorBase):
 
         self._state = self.mean + np.sqrt(init_var) * self.rng.standard_normal(1)
 
-    def reset(self, init=None, seed=None):
+    def reset(self, init: float | None = None, *, seed: int | None = None) -> None:
         with self._lock:
-            super().reset(seed=seed)
+            super().reset(init=init, seed=seed)
             if init is not None:
                 self._state = init
             else:
@@ -32,4 +37,4 @@ class WienerProcess(GeneratorBase):
             return x
 
     def psd(self, f: np.ndarray) -> np.ndarray:
-        return self.diffusion_rate / (2*np.pi*f)**2
+        return self.diffusion_rate / (2 * np.pi * f)**2

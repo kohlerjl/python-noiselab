@@ -1,0 +1,25 @@
+name: Ruff
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+      - 'update/ruff'
+
+  pull_request:
+    branches:
+      - 'main'
+      - 'develop'
+      - 'update/ruff'
+
+  workflow_dispatch:
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+        with:
+            version: "latest"

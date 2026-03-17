@@ -1,15 +1,21 @@
+from __future__ import annotations
+
+from collections.abc import Iterable
+from typing import Literal
+
 import numpy as np
 import pytest
+from numpy.typing import NDArray
 
-from noiselab.generators import MarkovProcess
-from noiselab.adev import oavar, RealtimeADEV
+from noiselab.adev import RealtimeADEV, oavar
+from noiselab.generators import GeneratorBase, MarkovProcess
 
-num = int(2**16)
+num = 2**16
 dt = 1
 
 
 @pytest.fixture(scope="module")
-def generator():
+def generator() -> MarkovProcess:
     diffusion_rate = 0.1
     correlation_time = 10.0
 
@@ -17,11 +23,11 @@ def generator():
 
 
 @pytest.fixture(scope="module")
-def noise(generator):
+def noise(generator: GeneratorBase) -> NDArray[np.double]:
     return generator.sample(num, dt=dt)
 
 
-def test_realtime(noise):
+def test_realtime(noise: NDArray[np.double]) -> None:
     for data_type in ('averaged', 'integrated'):
         for taus_str in ('octave', 'octave2', 'decade1', 'decade3'):
             taus, avar, ns = oavar(noise, dt=dt, taus=taus_str, data_type=data_type)
@@ -40,7 +46,10 @@ def test_realtime(noise):
             assert np.all(np.isclose(rt.avar(), avar))
 
 
-def run_test(noise, chunksize, taus='decade3', data_type='averaged'):
+def run_test(noise: NDArray[np.double], *,
+             chunksize: int,
+             taus: str | Iterable[float] = 'decade3',
+             data_type: Literal['averaged', 'integrated'] = 'averaged') -> None:
     taus, avar, ns = oavar(noise, dt=dt, taus=taus, data_type=data_type)
     rt = RealtimeADEV(dt=dt, taus=taus, data_type=data_type)
     for chunk in noise.reshape((chunksize, -1)):
@@ -58,7 +67,7 @@ def run_test(noise, chunksize, taus='decade3', data_type='averaged'):
     assert np.all(np.isclose(rt.avar(), avar))
 
 
-def test_realtime_chunks(noise):
+def test_realtime_chunks(noise: NDArray[np.double]) -> None:
     for data_type in ('averaged', 'integrated'):
         for taus in ('octave', 'octave2', 'decade1', 'decade3'):
             for chunksize in [2**0, 2**1, 2**4, 201]:
