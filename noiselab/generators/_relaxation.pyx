@@ -30,7 +30,7 @@ cdef class RelaxationGenerator:
     cdef public double mean_inv_lambda
     cdef public double fill_time
 
-    cdef double average
+    cdef double mean
     cdef double stddev
     cdef public double skewness
     cdef public double gaussianity
@@ -134,9 +134,9 @@ cdef class RelaxationGenerator:
         self.transition_rate = self.gaussianity/self.mean_inv_lambda
         self.tau = 1. / self.transition_rate
 
-        self.average = self.transition_rate * self.mean_inv_lambda
-        self.stddev = sqrt(self.average / 2.0)
-        self.skewness = pow(2.0, 1.5)/(3.0 * sqrt(self.average))
+        self.mean = self.transition_rate * self.mean_inv_lambda
+        self.stddev = sqrt(self.mean / 2.0)
+        self.skewness = pow(2.0, 1.5)/(3.0 * sqrt(self.mean))
 
         self.lb_min = pow(self.lambda_min, 1.-self.beta0)
         self.lb_max = pow(self.lambda_max, 1.-self.beta0)
@@ -146,7 +146,7 @@ cdef class RelaxationGenerator:
         else:
             self.binv = 0.
 
-        self.mean_list_length = <int> (self.decay_max*self.average)
+        self.mean_list_length = <int> (self.decay_max*self.mean)
         self.fill_time = self.decay_max / self.lambda_min    
         if not self._advance(self.fill_time):
             return False
@@ -214,7 +214,7 @@ cdef class RelaxationGenerator:
 
     cdef inline float _generate_exponential(self) nogil:
         if self.exp_index == self.cache_size:
-            random_standard_exponential_fill_f(self.bitgen, self.cache_size, <double*> self.exp_cache)
+            random_standard_exponential_fill_f(self.bitgen, self.cache_size, self.exp_cache)
             self.exp_index = 0
 
         cdef float value = self.exp_cache[self.exp_index]
@@ -259,7 +259,7 @@ cdef class RelaxationGenerator:
             return False
 
         raw_signal = self._response(t)
-        self.last_signal = (raw_signal - self.average)/self.stddev
+        self.last_signal = (raw_signal - self.mean)/self.stddev
 
         self.t_last = t
         return True
@@ -292,7 +292,7 @@ cdef class RelaxationGenerator:
             return False
 
         raw_signal = self._integrated_response(self.t_last, t)
-        self.last_signal = self.last_signal + (raw_signal - self.average*(t-self.t_last))/self.stddev
+        self.last_signal = self.last_signal + (raw_signal - self.mean*(t-self.t_last))/self.stddev
 
         self.t_last = t
         return True

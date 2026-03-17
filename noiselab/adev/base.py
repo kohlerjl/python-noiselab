@@ -2,14 +2,21 @@ from __future__ import annotations
 
 import logging
 import math
-import typing
+from collections.abc import Iterable
 
 import numpy as np
+from numpy.typing import NDArray
 
 logger = logging.getLogger(__name__)
 
+TDoubleArray = NDArray[np.double]
+TIntArray = NDArray[np.int64]
 
-def sample_logspace(num, base, subspacing: int | typing.Sequence[int] = 1, dtype=np.int64):
+
+def sample_logspace(num: int, *,
+                    base: float,
+                    subspacing: int | Iterable[int] = 1,
+                    dtype: np.dtype = np.int64) -> TIntArray:
     if isinstance(subspacing, int):
         subspacing = np.logspace(0, 1, num=subspacing + 1, base=base)
 
@@ -23,17 +30,17 @@ def sample_logspace(num, base, subspacing: int | typing.Sequence[int] = 1, dtype
     return spacing[spacing < num / 2]  # Drop any intervals greater or equal to half the sample size
 
 
-def get_strides(dt: float, num: int, taus: str | typing.Sequence[float], dtype=np.int64):
+def get_strides(dt: float, num: int, taus: str | Iterable[float], dtype: np.dtype = np.int64) -> TIntArray:
     if not isinstance(taus, str):
         return np.array(np.round(np.array(taus) / dt), dtype=dtype)
-    elif taus.startswith('octave'):
+    if taus.startswith('octave'):
         prefix_len = len('octave')
         if len(taus) > prefix_len:
-            subspacing = int(taus[prefix_len:])
+            subspacing: int | list[int] = int(taus[prefix_len:])
         else:
             subspacing = 1
         return sample_logspace(num, base=2, subspacing=subspacing, dtype=dtype)
-    elif taus.startswith('decade'):
+    if taus.startswith('decade'):
         prefix_len = len('decade')
         if len(taus) > prefix_len:
             subspacing = int(taus[prefix_len:])
@@ -41,11 +48,11 @@ def get_strides(dt: float, num: int, taus: str | typing.Sequence[float], dtype=n
         else:
             subspacing = [1, 2, 4]  # Match default decade spacing in allantools and Stable32
         return sample_logspace(num, base=10, subspacing=subspacing, dtype=dtype)
-    else:
-        raise ValueError(f"Invalid taus: {taus!r}. Must be one of: 'octave[n]' or 'decade[n]'")
+
+    raise ValueError(f"Invalid taus: {taus!r}. Must be one of: 'octave[n]' or 'decade[n]'")
 
 
-def integrate_samples(x: np.ndarray) -> np.ndarray:
+def integrate_samples(x: TDoubleArray) -> TDoubleArray:
     # Subtract mean to avoid loss of precision from accumulator overflow in integrated values
     x = x - np.mean(x)
     sum_x = np.empty(len(x) + 1, dtype=x.dtype)

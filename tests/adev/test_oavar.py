@@ -1,35 +1,33 @@
 import numpy as np
 import pytest
 
-from noiselab.generators import MarkovProcess
 from noiselab.adev import oavar
+from noiselab.generators import GeneratorBase, MarkovProcess
 
 
 @pytest.fixture(scope="module")
-def generator():
+def generator() -> GeneratorBase:
     diffusion_rate = 0.1
     correlation_time = 10.0
 
     return MarkovProcess(diffusion_rate=diffusion_rate, correlation_time=correlation_time)
 
 
-def test_adev_spacing(generator):
+def test_adev_spacing(generator: GeneratorBase) -> None:
     noise = generator.sample(num=100, dt=1)
 
     def _test(noise, taus, data_type):  # noqa
-        taus, avar, num_terms = oavar(noise, dt=1, taus=taus, data_type=data_type)
+        taus, _avar, num_terms = oavar(noise, dt=1, taus=taus, data_type=data_type)
         assert all(num_terms > 1)
 
     for data_type in ('averaged', 'integrated'):
         for taus in ('octave', 'octave2', 'octave3', 'decade', 'decade1', 'decade2', 'decade3', 'decade4'):
-            for num in range(len(noise)+1):
+            for num in range(len(noise) + 1):
                 _test(noise[:num], taus=taus, data_type=data_type)
 
 
-def test_adev_large(generator):
-    """
-    Test for errors due to numerical overflow in case of integer overflow due to improper type conversions
-    """
+def test_adev_large(generator: GeneratorBase) -> None:
+    """Test for errors due to numerical overflow in case of integer overflow due to improper type conversions."""
     noise = generator.sample(num=10_000_000, dt=1)
 
     def _test(noise, taus, data_type):  # noqa
@@ -43,10 +41,8 @@ def test_adev_large(generator):
             _test(noise, taus=taus, data_type=data_type)
 
 
-def test_adev_large_mean(generator):
-    """
-    Test for loss of precision due to large constant offset on data
-    """
+def test_adev_large_mean(generator: GeneratorBase) -> None:
+    """Test for loss of precision due to large constant offset on data."""
     noise = generator.sample(num=1_000_000, dt=1)
 
     def _test_offset(x, offset, taus, data_type):  # noqa
