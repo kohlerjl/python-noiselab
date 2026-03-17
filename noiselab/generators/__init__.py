@@ -1,6 +1,7 @@
+from .base import GeneratorBase
 from .markov import MarkovProcess
 from .relaxation import RelaxationProcess
 from .white import WhitenoiseProcess
 from .wiener import WienerProcess
 
-_all_ = [WhitenoiseProcess, WienerProcess, MarkovProcess, RelaxationProcess]
+__all__ = ['GeneratorBase', 'MarkovProcess', 'RelaxationProcess', 'WhitenoiseProcess', 'WienerProcess']

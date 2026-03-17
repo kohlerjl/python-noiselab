@@ -34,19 +34,13 @@ def get_strides(dt: float, num: int, taus: str | Iterable[float], dtype: np.dtyp
     if not isinstance(taus, str):
         return np.array(np.round(np.array(taus) / dt), dtype=dtype)
     if taus.startswith('octave'):
-        prefix_len = len('octave')
-        if len(taus) > prefix_len:
-            subspacing: int | list[int] = int(taus[prefix_len:])
-        else:
-            subspacing = 1
+        subspace_str = taus[len('octave'):]
+        subspacing: int = int(subspace_str) if subspace_str else 1
         return sample_logspace(num, base=2, subspacing=subspacing, dtype=dtype)
     if taus.startswith('decade'):
-        prefix_len = len('decade')
-        if len(taus) > prefix_len:
-            subspacing = int(taus[prefix_len:])
-
-        else:
-            subspacing = [1, 2, 4]  # Match default decade spacing in allantools and Stable32
+        subspace_str = taus[len('decade'):]
+        # Match default decade spacing in allantools and Stable32
+        subspacing: int | list[int] = int(subspace_str) if subspace_str else [1, 2, 4]
         return sample_logspace(num, base=10, subspacing=subspacing, dtype=dtype)
 
     raise ValueError(f"Invalid taus: {taus!r}. Must be one of: 'octave[n]' or 'decade[n]'")
