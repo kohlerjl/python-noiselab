@@ -53,7 +53,7 @@ class MarkovProcess(GeneratorBase):
             integrate_markov(
                 dW,
                 out,
-                y0=self._state,
+                y0=self._state.item(),
                 D2=np.sqrt(dt * self.diffusion_rate),
                 G=dt / self.correlation_time,
             )
