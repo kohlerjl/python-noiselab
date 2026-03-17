@@ -94,6 +94,7 @@ select = [
     # "PLR",
     "PLW",
     "RUF",
+    "FA102",
 ]
 ignore = [
     "D100",
