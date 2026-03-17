@@ -43,14 +43,21 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff>=0.14.0", "pytest >= 7.2.2", "pre-commit"]
+dev = [
+    "ruff>=0.14.0",
+    "pytest >= 7.2.2",
+    "pre-commit",
+]
 
 [project.urls]
 source = "https://github.com/kohlerjl/python-noiselab"
 download = "https://pypi.python.org/pypi/noiselab"
 
+[tool.setuptools.packages.find]
+where = ["src"] # Tells setuptools to look for packages inside the 'src' directory
+
 [tool.setuptools_scm]
-version_file = "noiselab/_version.py"
+version_file = "src/noiselab/_version.py"
 
 [tool.jupytext]
 formats = "ipynb,py:percent"
