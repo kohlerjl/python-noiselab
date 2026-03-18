@@ -1,4 +1,4 @@
-name: Build packages
+name: Build native package
 
 on:
   pull_request:
