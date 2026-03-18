@@ -12,6 +12,27 @@ jobs:
     uses: ./.github/workflows/build_matrix.yml
     secrets: inherit
 
+  github-release:
+    name: Upload to GitHub Release 📂
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Mandatory for uploading to releases
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v8
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Upload artifacts to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          prerelease: true
+          generate_release_notes: true
+
   test-publish:
     name: Publish to TestPyPI 🧪
     needs: build
