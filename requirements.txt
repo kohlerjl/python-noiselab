@@ -12,4 +12,5 @@ tdigest-cffi
 pytdigest
 
 jupyterlab
+jupytext
 matplotlib
