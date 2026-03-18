@@ -9,14 +9,14 @@ power spectra. These noisy signals can then be analyzed using Power Spectral Den
 or the Allan deviation, in noiselab.adev. This library also contains a wrapper for a fast TDigest library written in C,
 which can be used to efficiently estimate quantiles of arbitrary noise distributions.
 
-[Generators]
+# Generators
 
 * WhitenoiseProcess: White noise
 * WienerProcess: Brownian noise / Wiener process
-* MarkovProcess: Orenstein-Uhlenbeck / 1st-order markov process
-* RelaxationProcess: \alpha = 0 - 2 Power-law noise (PLNoise)
+* MarkovProcess: Orenstein-Uhlenbeck / 1st-order Markov process
+* RelaxationProcess: $\alpha = 0 - 2$ Power-law noise (PLNoise)
 
-[generators.RelaxationProcess]
+## RelaxationProcess - PLNoise
 
 Fast Cython implemention of PLNoise2 power-low noise generation algorithm described in the following references:
 
@@ -29,6 +29,6 @@ Milotti, Edoardo (2007), “New version of PLNoise: a package for exact numerica
 Link: https://doi.org/10.17632/nt7mcwh98m.1
 
 
-[TDigest]
+# TDigest
 * https://arxiv.org/abs/1902.04023
 * Python bindings for C library: https://github.com/RedisBloom/t-digest-c
