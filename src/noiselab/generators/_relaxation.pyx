@@ -60,7 +60,7 @@ cdef class RelaxationGenerator:
     cdef bitgen_t *bitgen
 
     # Input noise sample cache
-    cdef public Py_ssize_t cache_size 
+    cdef public Py_ssize_t cache_size
     cdef Py_ssize_t exp_index
     cdef float* exp_cache
     cdef Py_ssize_t uni_index
@@ -100,7 +100,7 @@ cdef class RelaxationGenerator:
         self.bitgen = <bitgen_t *> PyCapsule_GetPointer(capsule, "BitGenerator")
 
         self.cache_size = cache_size
-        self.exp_index = cache_size    
+        self.exp_index = cache_size
         self.uni_index = cache_size
 
         self.exp_cache = <float*> malloc(sizeof(float)*self.cache_size)
@@ -147,7 +147,7 @@ cdef class RelaxationGenerator:
             self.binv = 0.
 
         self.mean_list_length = <int> (self.decay_max*self.mean)
-        self.fill_time = self.decay_max / self.lambda_min    
+        self.fill_time = self.decay_max / self.lambda_min
         if not self._advance(self.fill_time):
             return False
 
@@ -282,7 +282,7 @@ cdef class RelaxationGenerator:
                 next = current.next
 
             current = current.next
-        
+
         return signal
 
     cdef inline bint _sample_integrated(self, double t) nogil:
@@ -306,7 +306,7 @@ cdef class RelaxationGenerator:
         if t2 <= t1:
             # return a nonzero value only if t2 > t1
             return 0
-        
+
         dt = t2 - t1
         sum = 0
 
