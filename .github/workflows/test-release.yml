@@ -35,3 +35,4 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
           # Optional: allow overwriting the same version on TestPyPI
           skip-existing: true
+          verbose: true
