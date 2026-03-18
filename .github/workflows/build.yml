@@ -51,7 +51,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
         env:
           # configure cibuildwheel on Linux to build native archs ('auto') and to build arm7 on x86_64
-          CIBW_ARCHS_LINUX: ${{ runner.arch == 'X64' && 'auto arm7l' || 'auto' }}
+          CIBW_ARCHS_LINUX: ${{ runner.arch == 'X64' && 'auto armv7l' || 'auto' }}
 
       - name: Store the distribution packages
         uses: actions/upload-artifact@v7
