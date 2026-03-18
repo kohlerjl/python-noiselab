@@ -62,7 +62,7 @@ version_file = "src/noiselab/_version.py"
 [tool.cibuildwheel]
 # Build for all supported versions by default
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
-skip = "musllinux*"
+skip = "*musllinux*"
 # Run tests inside the same environment that built the wheel
 test-requires = "pytest"
 test-command = "pytest {project}/tests"
