@@ -49,7 +49,7 @@ jobs:
           # configure cibuildwheel on Linux to build native archs ('auto'),
           # and to split the remaining architectures between the x86_64 and
           # ARM runners
-          # CIBW_ARCHS_LINUX: ${{ runner.arch == 'X64' && 'auto ppc64le s390x' || 'auto' }}
+          CIBW_ARCHS_LINUX: ${{ runner.arch == 'X64' && 'auto arm7l' || 'auto' }}
 
       - name: Store the distribution packages
         uses: actions/upload-artifact@v7

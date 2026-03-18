@@ -62,14 +62,9 @@ version_file = "src/noiselab/_version.py"
 [tool.cibuildwheel]
 # Build for all supported versions by default
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
-# Skip 32-bit builds and PyPy if not supported
-skip = "pp*"
 # Run tests inside the same environment that built the wheel
 test-requires = "pytest"
 test-command = "pytest {project}/tests"
-
-[tool.cibuildwheel.linux]
-archs = ["x86_64", "aarch64"]
 
 [tool.jupytext]
 formats = "ipynb,py:percent"
