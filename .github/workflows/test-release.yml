@@ -2,14 +2,14 @@ name: TestPyPI Publish
 
 on:
   push:
-    branches:
-      - 'main'
+    tags:
+      - 'test-v*'
 
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
   build:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build_matrix.yml
     secrets: inherit
 
   test-publish:
