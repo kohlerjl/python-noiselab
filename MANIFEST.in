@@ -1,0 +1,2 @@
+recursive-include src/noiselab/tdigest/t-digest-c/src/ *.h
+recursive-include src/noiselab/tdigest/t-digest-c/src/ *.c

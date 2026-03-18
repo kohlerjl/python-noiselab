@@ -1,0 +1,37 @@
+name: TestPyPI Publish
+
+on:
+  push:
+    branches:
+      - 'main'
+
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  test-publish:
+    name: Publish to TestPyPI 🧪
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/noiselab
+    permissions:
+      id-token: write  # Required for Trusted Publishing
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v8
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish distribution 📦 to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          # Optional: allow overwriting the same version on TestPyPI
+          skip-existing: true
