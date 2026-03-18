@@ -6,4 +6,5 @@
     "python.testing.pytestEnabled": true,
     "cmake.ignoreCMakeListsMissing": true,
     "files.autoSave": "afterDelay",
+    "files.trimTrailingWhitespace": true
 }

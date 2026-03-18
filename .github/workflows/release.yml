@@ -1,9 +1,9 @@
-name: Publish to TestPyPI
+name: Publish to PyPI
 
 on:
   push:
     tags:
-      - 'test-v*'
+      - 'v*'
 
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
@@ -30,16 +30,16 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
-          prerelease: true
+          prerelease: ${{ contains(github.ref_name, 'rc') }}
           generate_release_notes: true
 
-  test-publish:
-    name: Publish to TestPyPI 🧪
+  pypi-publish:
+    name: Publish to PyPI 🚀
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/noiselab
+      name: pypi
+      url: https://pypi.org/p/noiselab
     permissions:
       id-token: write  # Required for Trusted Publishing
     steps:
@@ -50,10 +50,5 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Publish distribution 📦 to TestPyPI
+      - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          # Optional: allow overwriting the same version on TestPyPI
-          skip-existing: true
-          verbose: true

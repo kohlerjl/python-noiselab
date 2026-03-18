@@ -1,10 +1,9 @@
-name: Build packages
+name: Build all packages
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-      - develop
   workflow_dispatch:
   workflow_call:
 
@@ -43,7 +42,7 @@ jobs:
 
       - name: Set up QEMU
         if: runner.os == 'Linux' && runner.arch == 'X64'
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: all
 
