@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "setuptools>=77.0.3",
-    "setuptools-scm",
+    "setuptools_scm[toml]>=8.0",
     "wheel",
     "cython",
     "numpy",
@@ -35,6 +35,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 
 dependencies = [
@@ -62,10 +63,11 @@ where = ["src"] # Tells setuptools to look for packages inside the 'src' directo
 
 [tool.setuptools_scm]
 version_file = "src/noiselab/_version.py"
+local_scheme = "no-local-version"
 
 [tool.cibuildwheel]
 # Build for all supported versions by default
-build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
+build = "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
 skip = "*musllinux*"
 # Run tests inside the same environment that built the wheel
 test-requires = "pytest"
