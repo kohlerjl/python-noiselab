@@ -1,0 +1,54 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    uses: ./.github/workflows/build_matrix.yml
+    secrets: inherit
+
+  github-release:
+    name: Upload to GitHub Release 📂
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Mandatory for uploading to releases
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v8
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Upload artifacts to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          prerelease: ${{ contains(github.ref_name, 'rc') }}
+          generate_release_notes: true
+
+  pypi-publish:
+    name: Publish to PyPI 🚀
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/noiselab
+    permissions:
+      id-token: write  # Required for Trusted Publishing
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v8
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
