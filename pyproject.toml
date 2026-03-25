@@ -49,6 +49,10 @@ dev = [
     "pytest >= 7.2.2",
     "pre-commit",
 ]
+notebooks = [
+    "jupyter",
+    "jupytext",
+]
 
 [project.urls]
 source = "https://github.com/kohlerjl/python-noiselab"
@@ -134,6 +138,7 @@ unfixable = ["F401", "F841"]
 
 [tool.ruff.lint.per-file-ignores]
 "test_*.py" = ["ANN003", "D101", "D103"]
+"notebooks/*.py" = ["E501", "B018"]
 
 [tool.ruff.lint.isort]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]

@@ -156,3 +156,4 @@ cython_debug/
 .idea/
 
 src/noiselab/_version.py
+*.ipynb
