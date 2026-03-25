@@ -31,15 +31,18 @@ class RelaxationProcess(GeneratorBase):
         self.f_max = f_max
         self.mean = mean
         self.var = var
+        self.gaussianity = gaussianity
+        self.decay_max = decay_max
+        self.cache_size = cache_size
 
         self.gen = RelaxationGenerator(
-            alpha,
-            f_min,
-            f_max,
-            gaussianity=gaussianity,
-            decay_max=decay_max,
+            alpha=self.alpha,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            gaussianity=self.gaussianity,
+            decay_max=self.decay_max,
             rng=self.rng.bit_generator,
-            cache_size=cache_size,
+            cache_size=self.cache_size,
         )
 
     def __getattr__(self, item: str) -> object:
@@ -47,8 +50,16 @@ class RelaxationProcess(GeneratorBase):
 
     def reset(self, init: float | None = None, *, seed: int | None = None) -> None:
         super().reset(init=init, seed=seed)
-        # TODO implement reset
-        raise NotImplementedError()
+
+        self.gen = RelaxationGenerator(
+            alpha=self.alpha,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            gaussianity=self.gaussianity,
+            decay_max=self.decay_max,
+            rng=self.rng.bit_generator,
+            cache_size=self.cache_size,
+        )
 
     def sample(self, num: int, *, dt: float) -> np.ndarray:
         out = np.sqrt(self.var) * self.gen.get_samples(num=num, dt=dt)
